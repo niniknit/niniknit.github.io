@@ -1,0 +1,200 @@
+<!-- Navigation for niniknit shop -->
+<nav class="main-navigation">
+  <div class="nav-container">
+    <div class="nav-logo">
+      <a href="{{ '/' | absolute_url }}" class="logo-link">
+        <img src="/logo.png" alt="نینی‌نیت" class="nav-logo-img">
+      </a>
+    </div>
+    <div class="nav-menu">
+      <a href="{{ '/' | absolute_url }}" class="nav-link {% if page.url == '/' %}active{% endif %}">خانه</a>
+      <a href="{{ '/products/' | absolute_url }}" class="nav-link {% if page.url contains '/products/' %}active{% endif %}">محصولات</a>
+      <a href="{{ '/about/' | absolute_url }}" class="nav-link {% if page.url contains '/about/' %}active{% endif %}">درباره ما</a>
+      <a href="{{ '/contact/' | absolute_url }}" class="nav-link {% if page.url contains '/contact/' %}active{% endif %}">تماس</a>
+      <a href="https://wa.me/989171035286" class="nav-link nav-whatsapp" target="_blank">واتساپ</a>
+    </div>
+  </div>
+</nav>
+
+<style>
+.main-navigation {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  direction: rtl;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.logo-link:hover {
+  transform: scale(1.05);
+  text-decoration: none;
+}
+
+.nav-logo-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+  transition: all 0.3s ease;
+  object-fit: cover;
+}
+
+.logo-link:hover .nav-logo-img {
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+  transform: rotate(5deg);
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #555;
+  font-family: 'Vazirmatn', 'Tahoma', sans-serif;
+  font-weight: 500;
+  padding: 12px 20px;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.nav-link:hover::before {
+  left: 100%;
+}
+
+.nav-link:hover {
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.08);
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+}
+
+.nav-link.active {
+  color: #667eea;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+}
+
+.nav-whatsapp {
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+  font-weight: 600;
+}
+
+.nav-whatsapp:hover {
+  background: linear-gradient(135deg, #128C7E 0%, #25D366 100%);
+  color: white !important;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+.nav-whatsapp::before {
+  display: none;
+}
+
+/* Mobile Navigation */
+@media (max-width: 768px) {
+  .nav-container {
+    flex-direction: column;
+    height: auto;
+    padding: 20px;
+  }
+  
+  .nav-menu {
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .nav-link {
+    font-size: 0.9rem;
+    padding: 10px 16px;
+    flex: 1;
+    text-align: center;
+    min-width: 120px;
+  }
+  
+  .nav-logo-img {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-menu {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .nav-link {
+    width: 100%;
+    min-width: auto;
+  }
+}
+</style>
+
+<hr>
+<div class="post_navi">
+  {%- if page.previous.url -%}
+  <a class="post_navi-item nav_prev" href="{{ page.previous.url }}" title="{{ page.previous.title }}">
+    <div class="post_navi-arrow">&lt;</div><div class="post_navi-label">مطلب قبلی</div><div><span>{{ page.previous.title }}</span></div>
+  </a>
+  {%- else -%}
+  <a class="post_navi-item nav_prev" href="{{ 'archive.html' | absolute_url }}" title="آرشیو وبلاگ">
+    <div class="post_navi-arrow">&lt;</div><div class="post_navi-label">آرشیو وبلاگ</div><div><span>آرشیو تمام مطالب قبلی وبلاگ</span></div>
+  </a>
+  {%- endif -%}
+  {%- if page.next.url -%}
+  <a class="post_navi-item nav_next" href="{{ page.next.url }}" title="{{ page.next.title }}">
+    <div class="post_navi-arrow">&gt;</div><div class="post_navi-label">مطلب بعدی</div><div><span>{{ page.next.title }}</span></div>
+  </a>
+  {%- else -%}
+  <a class="post_navi-item nav_next" href="{{ 'archive.html' | absolute_url }}" title="آرشیو وبلاگ">
+    <div class="post_navi-arrow">&gt;</div><div class="post_navi-label">آرشیو وبلاگ</div><div><span>آرشیو تمام مطالب قبلی وبلاگ</span></div>
+  </a>
+  {%- endif -%}
+</div>

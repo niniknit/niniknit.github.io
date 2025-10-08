@@ -1,0 +1,333 @@
+---
+layout: default
+---
+
+<div class="product-page">
+  <div class="container">
+    <div class="product-header">
+      <div class="product-images">
+        {% if page.images %}
+          <div class="main-image">
+            <img src="{{ page.images[0] | relative_url }}" alt="{{ page.title }}" class="product-main-img">
+          </div>
+          {% if page.images.size > 1 %}
+            <div class="image-gallery">
+              {% for image in page.images %}
+                <img src="{{ image | relative_url }}" alt="{{ page.title }}" class="gallery-thumb" onclick="changeMainImage('{{ image | relative_url }}')">
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% else %}
+          <div class="main-image">
+            <div class="placeholder-image">
+              <span class="placeholder-icon">🖼️</span>
+              <p>تصویر محصول</p>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+      
+      <div class="product-info">
+        <h1 class="product-title">{{ page.title }}</h1>
+        <p class="product-description">{{ page.description }}</p>
+        
+        {% if page.price %}
+          <div class="product-price">
+            <span class="price-label">قیمت:</span>
+            <span class="price-value">{{ page.price }} تومان</span>
+          </div>
+        {% endif %}
+        
+        {% if page.sizes %}
+          <div class="product-sizes">
+            <h3>سایزهای موجود:</h3>
+            <div class="size-options">
+              {% for size in page.sizes %}
+                <span class="size-option">{{ size }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+        
+        {% if page.colors %}
+          <div class="product-colors">
+            <h3>رنگ‌های موجود:</h3>
+            <div class="color-options">
+              {% for color in page.colors %}
+                <span class="color-option" style="background-color: {{ color.code }}; color: {{ color.text_color | default: '#000' }}">{{ color.name }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+        
+        <div class="product-actions">
+          <a href="https://wa.me/989171035268?text=سلام، در مورد {{ page.title }} سوال دارم" class="btn btn-whatsapp-large" target="_blank">
+            <span class="whatsapp-icon">📱</span>
+            سفارش از طریق واتساپ
+          </a>
+          <a href="https://instagram.com/niniknit_azar" class="btn btn-instagram" target="_blank">
+            <span class="instagram-icon">📷</span>
+            مشاهده در اینستاگرام
+          </a>
+        </div>
+        
+        {% if page.features %}
+          <div class="product-features">
+            <h3>ویژگی‌های محصول:</h3>
+            <ul class="features-list">
+              {% for feature in page.features %}
+                <li>{{ feature }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    
+    {% if page.content %}
+      <div class="product-details">
+        <h2>توضیحات بیشتر</h2>
+        {{ content }}
+      </div>
+    {% endif %}
+    
+    <div class="product-navigation">
+      <a href="/products/" class="btn btn-outline">بازگشت به محصولات</a>
+    </div>
+  </div>
+</div>
+
+<style>
+.product-page {
+  padding: 40px 0;
+  direction: rtl;
+}
+
+.product-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  margin-bottom: 60px;
+}
+
+.product-images {
+  position: sticky;
+  top: 100px;
+}
+
+.main-image {
+  margin-bottom: 20px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.product-main-img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-main-img:hover {
+  transform: scale(1.05);
+}
+
+.placeholder-image {
+  width: 100%;
+  height: 400px;
+  background: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  border-radius: 15px;
+}
+
+.placeholder-icon {
+  font-size: 4rem;
+  margin-bottom: 15px;
+}
+
+.image-gallery {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px 0;
+}
+
+.gallery-thumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.gallery-thumb:hover {
+  border-color: #667eea;
+  transform: scale(1.1);
+}
+
+.product-info {
+  padding: 20px 0;
+}
+
+.product-title {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.product-description {
+  font-size: 1.2rem;
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 30px;
+}
+
+.product-price {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.price-label {
+  font-size: 1.1rem;
+  margin-left: 10px;
+}
+
+.price-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.product-sizes, .product-colors, .product-features {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 15px;
+}
+
+.product-sizes h3, .product-colors h3, .product-features h3 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+.size-options, .color-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.size-option {
+  padding: 8px 16px;
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 20px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.size-option:hover {
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.color-option {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 500;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.color-option:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+}
+
+.features-list li {
+  padding: 8px 0;
+  position: relative;
+  padding-right: 25px;
+}
+
+.features-list li::before {
+  content: '✓';
+  position: absolute;
+  right: 0;
+  color: #25D366;
+  font-weight: bold;
+}
+
+.product-actions {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.product-details {
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  margin-bottom: 40px;
+}
+
+.product-details h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.product-navigation {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .product-header {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .product-images {
+    position: static;
+  }
+  
+  .product-title {
+    font-size: 2rem;
+  }
+  
+  .product-actions {
+    flex-direction: column;
+  }
+  
+  .product-actions .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+</style>
+
+<script>
+function changeMainImage(imageSrc) {
+  const mainImg = document.querySelector('.product-main-img');
+  if (mainImg) {
+    mainImg.src = imageSrc;
+  }
+}
+</script>

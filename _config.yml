@@ -1,0 +1,61 @@
+title: "نینی‌نیت - لباس‌های بافتنی نوزاد"
+author: "نینی‌نیت"
+description: "فروشگاه آنلاین لباس‌های بافتنی دست‌ساز برای نوزادان و کودکان - طراحی‌های منحصر به فرد و با کیفیت" # This will show up in places like twitter, linkedin, etc, if you share your sites url as a post.
+
+# Email / Social media user names used by the minima theme:
+# All of these are optional and can be removed or commented out
+email: "info@niniknit.ir"
+instagram_username: "niniknit_azar"
+whatsapp: "+989171035286"
+#facebook_username: username
+#flickr_username: username
+#instagram_username: username
+#pinterest_username: username
+#youtube_username: username
+#googleplus_username: +username
+
+#########################################################################################
+######### Nothing below needs to be changed (unless you know what you're doing) #########
+#########################################################################################
+theme: "minima"
+
+rss: rss
+
+kramdown:
+  syntax_highlighter_opts:
+    disable: true
+    
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+titles_from_headings:
+  strip_title: true
+  collections: true
+
+# Collections for products
+collections:
+  products:
+    output: true
+    permalink: /products/:name/
+  categories:
+    output: true
+    permalink: /categories/:name/
+
+defaults:
+  - scope:
+      path: ""
+      type: post
+    values:
+      tags: Other
+  - scope:
+      path: ""
+      type: products
+    values:
+      layout: product
+      show_in_products: true
+  - scope:
+      path: ""
+      type: categories
+    values:
+      layout: category

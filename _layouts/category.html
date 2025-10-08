@@ -1,0 +1,223 @@
+---
+layout: default
+---
+
+<div class="category-page">
+  <div class="container">
+    <div class="category-header">
+      <h1>{{ page.title }}</h1>
+      <p class="category-description">{{ page.description }}</p>
+    </div>
+    
+    <div class="products-grid">
+      {% assign category_products = site.products | where: 'category', page.slug %}
+      {% for product in category_products %}
+        <div class="product-card">
+          <div class="product-image">
+            {% if product.images %}
+              <img src="{{ product.images[0] | relative_url }}" alt="{{ product.title }}" onerror="this.style.display='none'">
+            {% else %}
+              <div class="placeholder-image">
+                <span class="placeholder-icon">🖼️</span>
+              </div>
+            {% endif %}
+            <div class="product-overlay">
+              <a href="{{ product.url }}" class="btn btn-primary">مشاهده جزئیات</a>
+            </div>
+          </div>
+          <div class="product-info">
+            <h3>{{ product.title }}</h3>
+            <p>{{ product.description }}</p>
+            {% if product.price %}
+              <div class="product-price">{{ product.price }} تومان</div>
+            {% endif %}
+            <div class="product-actions">
+              <a href="{{ product.url }}" class="btn btn-outline">مشاهده</a>
+              <a href="https://wa.me/989171035268?text=سلام، در مورد {{ product.title }} سوال دارم" class="btn btn-whatsapp" target="_blank">سوال دارم</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    
+    {% if category_products.size == 0 %}
+      <div class="no-products">
+        <h3>هیچ محصولی در این دسته‌بندی یافت نشد</h3>
+        <p>به زودی محصولات جدید اضافه خواهند شد</p>
+        <a href="/products/" class="btn btn-primary">مشاهده همه محصولات</a>
+      </div>
+    {% endif %}
+    
+    <div class="category-navigation">
+      <a href="/products/" class="btn btn-outline">بازگشت به محصولات</a>
+    </div>
+  </div>
+</div>
+
+<style>
+.category-page {
+  padding: 40px 0;
+  direction: rtl;
+}
+
+.category-header {
+  text-align: center;
+  margin-bottom: 50px;
+  padding: 40px 0;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 15px;
+}
+
+.category-header h1 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-size: 2.5rem;
+}
+
+.category-description {
+  color: #666;
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+.product-card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+.product-image {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.05);
+}
+
+.placeholder-image {
+  width: 100%;
+  height: 100%;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+}
+
+.placeholder-icon {
+  font-size: 3rem;
+}
+
+.product-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product-card:hover .product-overlay {
+  opacity: 1;
+}
+
+.product-info {
+  padding: 20px;
+}
+
+.product-info h3 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+  font-size: 1.3rem;
+}
+
+.product-info p {
+  color: #666;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.product-price {
+  color: #667eea;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+}
+
+.product-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.product-actions .btn {
+  flex: 1;
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+}
+
+.no-products {
+  text-align: center;
+  padding: 60px 20px;
+  background: #f8f9fa;
+  border-radius: 15px;
+}
+
+.no-products h3 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.no-products p {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.category-navigation {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .product-actions {
+    flex-direction: column;
+  }
+  
+  .product-actions .btn {
+    width: 100%;
+  }
+}
+</style>
