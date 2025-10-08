@@ -8,12 +8,12 @@ layout: default
       <div class="product-images">
         {% if page.images %}
           <div class="main-image">
-            <img src="{{ page.images[0] | relative_url }}" alt="{{ page.title }}" class="product-main-img">
+            <img src="{{ page.images[0] | relative_url }}" alt="{{ page.title }}" class="product-main-img" onclick="openLightbox(this.src)">
           </div>
           {% if page.images.size > 1 %}
             <div class="image-gallery">
               {% for image in page.images %}
-                <img src="{{ image | relative_url }}" alt="{{ page.title }}" class="gallery-thumb" onclick="changeMainImage('{{ image | relative_url }}')">
+                <img src="{{ image | relative_url }}" alt="{{ page.title }}" class="gallery-thumb" onclick="changeMainImage('{{ image | relative_url }}'); openLightbox('{{ image | relative_url }}')">
               {% endfor %}
             </div>
           {% endif %}
@@ -97,6 +97,23 @@ layout: default
   </div>
 </div>
 
+<!-- Lightbox Modal for product images -->
+<div class="lightbox" id="lightbox" aria-hidden="true" style="display:none;">
+  <div class="lightbox-backdrop" id="lightbox-backdrop"></div>
+  <div class="lightbox-content" role="dialog" aria-modal="true">
+    <button class="lightbox-close" id="lightbox-close" aria-label="بستن">×</button>
+    <div class="lightbox-viewport" id="lightbox-viewport">
+      <img src="" alt="{{ page.title }}" class="lightbox-image" id="lightbox-image">
+    </div>
+    <div class="lightbox-controls">
+      <button class="lb-btn" id="lb-zoom-in" aria-label="بزرگ‌نمایی">+</button>
+      <button class="lb-btn" id="lb-zoom-out" aria-label="کوچک‌نمایی">−</button>
+      <button class="lb-btn" id="lb-reset" aria-label="بازنشانی">↺</button>
+    </div>
+  </div>
+  
+</div>
+
 <style>
 .product-page {
   padding: 40px 0;
@@ -131,6 +148,10 @@ layout: default
 
 .product-main-img:hover {
   transform: scale(1.05);
+}
+
+.product-main-img {
+  cursor: zoom-in;
 }
 
 .placeholder-image {
@@ -298,6 +319,100 @@ layout: default
   text-align: center;
 }
 
+/* Lightbox styles */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+}
+
+.lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(2px);
+}
+
+.lightbox-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(96vw, 1100px);
+  height: min(90vh, 800px);
+  background: #111;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 22px;
+  line-height: 36px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.lightbox-close:hover { background: rgba(255,255,255,0.25); }
+
+.lightbox-viewport {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  touch-action: none; /* enable custom pan/pinch */
+}
+
+.lightbox-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  max-width: none; /* we control size via transform */
+  will-change: transform;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.lightbox-controls {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  justify-content: center;
+  background: rgba(0,0,0,0.35);
+}
+
+.lb-btn {
+  min-width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.lb-btn:hover { background: rgba(255,255,255,0.2); }
+
+@media (max-width: 768px) {
+  .lightbox-content { width: 100vw; height: 100vh; border-radius: 0; }
+  .lightbox-close { top: 12px; left: 12px; width: 40px; height: 40px; font-size: 24px; }
+  .lightbox-controls { padding: 12px; }
+  .lb-btn { min-width: 44px; height: 44px; font-size: 22px; }
+}
+
 @media (max-width: 768px) {
   .product-header {
     grid-template-columns: 1fr;
@@ -330,4 +445,130 @@ function changeMainImage(imageSrc) {
     mainImg.src = imageSrc;
   }
 }
+
+// Lightbox logic
+let lbScale = 1;
+let lbMinScale = 1;
+let lbMaxScale = 4;
+let lbTranslateX = 0;
+let lbTranslateY = 0;
+let lbStartX = 0;
+let lbStartY = 0;
+let lbDragging = false;
+let lbStartDistance = 0;
+let lbStartScale = 1;
+
+function openLightbox(src) {
+  const lb = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-image');
+  if (!lb || !img) return;
+  img.src = src;
+  resetLightboxTransform();
+  lb.style.display = 'block';
+  lb.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  const lb = document.getElementById('lightbox');
+  if (!lb) return;
+  lb.style.display = 'none';
+  lb.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+function applyLbTransform() {
+  const img = document.getElementById('lightbox-image');
+  if (!img) return;
+  img.style.transform = `translate(calc(-50% + ${lbTranslateX}px), calc(-50% + ${lbTranslateY}px)) scale(${lbScale})`;
+}
+
+function resetLightboxTransform() {
+  lbScale = 1;
+  lbTranslateX = 0;
+  lbTranslateY = 0;
+  applyLbTransform();
+}
+
+// Setup listeners after DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+  const lb = document.getElementById('lightbox');
+  const viewport = document.getElementById('lightbox-viewport');
+  const backdrop = document.getElementById('lightbox-backdrop');
+  const btnClose = document.getElementById('lightbox-close');
+  const btnIn = document.getElementById('lb-zoom-in');
+  const btnOut = document.getElementById('lb-zoom-out');
+  const btnReset = document.getElementById('lb-reset');
+
+  if (!lb || !viewport) return;
+
+  // Close handlers
+  [backdrop, btnClose].forEach(el => el && el.addEventListener('click', closeLightbox));
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
+
+  // Zoom buttons
+  if (btnIn) btnIn.addEventListener('click', function(){ lbScale = Math.min(lbMaxScale, lbScale + 0.25); applyLbTransform(); });
+  if (btnOut) btnOut.addEventListener('click', function(){ lbScale = Math.max(lbMinScale, lbScale - 0.25); applyLbTransform(); });
+  if (btnReset) btnReset.addEventListener('click', resetLightboxTransform);
+
+  // Mouse wheel zoom (centered)
+  viewport.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    const delta = Math.sign(e.deltaY);
+    if (delta < 0) lbScale = Math.min(lbMaxScale, lbScale + 0.1);
+    else lbScale = Math.max(lbMinScale, lbScale - 0.1);
+    applyLbTransform();
+  }, { passive: false });
+
+  // Mouse drag pan
+  viewport.addEventListener('mousedown', function(e) {
+    lbDragging = true;
+    lbStartX = e.clientX - lbTranslateX;
+    lbStartY = e.clientY - lbTranslateY;
+  });
+  window.addEventListener('mousemove', function(e) {
+    if (!lbDragging) return;
+    lbTranslateX = e.clientX - lbStartX;
+    lbTranslateY = e.clientY - lbStartY;
+    applyLbTransform();
+  });
+  window.addEventListener('mouseup', function(){ lbDragging = false; });
+
+  // Touch: pan and pinch-to-zoom
+  viewport.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 1) {
+      const t = e.touches[0];
+      lbDragging = true;
+      lbStartX = t.clientX - lbTranslateX;
+      lbStartY = t.clientY - lbTranslateY;
+    } else if (e.touches.length === 2) {
+      lbDragging = false;
+      lbStartDistance = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      lbStartScale = lbScale;
+    }
+  }, { passive: true });
+
+  viewport.addEventListener('touchmove', function(e) {
+    if (e.touches.length === 1 && lbDragging) {
+      const t = e.touches[0];
+      lbTranslateX = t.clientX - lbStartX;
+      lbTranslateY = t.clientY - lbStartY;
+      applyLbTransform();
+    } else if (e.touches.length === 2 && lbStartDistance) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const factor = dist / lbStartDistance;
+      lbScale = Math.min(lbMaxScale, Math.max(lbMinScale, lbStartScale * factor));
+      applyLbTransform();
+    }
+  }, { passive: false });
+
+  viewport.addEventListener('touchend', function(){ lbDragging = false; lbStartDistance = 0; }, { passive: true });
+});
+</script>
 </script>
