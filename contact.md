@@ -54,18 +54,18 @@ permalink: /contact/
         <div class="info-grid">
           <div class="info-item">
             <h3>ساعات کاری</h3>
-            <p style="color:black;>شنبه تا پنج‌شنبه: ۹ صبح تا ۶ عصر</p>
-            <p style="color:black;>جمعه: ۹ صبح تا ۱ ظهر</p>
+            <p style="color:black;">شنبه تا پنج‌شنبه: ۹ صبح تا ۶ عصر</p>
+            <p style="color:black;">جمعه: ۹ صبح تا ۱ ظهر</p>
           </div>
           <div class="info-item">
             <h3>زمان پاسخ‌دهی</h3>
-            <p style="color:black;>واتساپ: حداکثر ۲ ساعت</p>
-            <p style="color:black;>ایمیل: حداکثر ۲۴ ساعت</p>
+            <p style="color:black;">واتساپ: حداکثر ۲ ساعت</p>
+            <p style="color:black;">ایمیل: حداکثر ۲۴ ساعت</p>
           </div>
           <div class="info-item">
             <h3>ارسال</h3>
-            <p style="color:black;>ارسال به سراسر ایران</p>
-            <p style="color:black;>زمان تحویل: ۳-۵ روز کاری</p>
+            <p style="color:black">ارسال به سراسر ایران</p>
+            <p style="color:black">زمان تحویل: ۳-۵ روز کاری</p>
           </div>
         </div>
       </div>
