@@ -15,7 +15,7 @@ images:
   - "/images/product-name-1.jpg"
   - "/images/product-name-2.jpg"
 features:
-  - "بافتنی دست‌ساز"
+  - "بافتنی دست‌باف"
   - "نرم و راحت"
   - "قابل شستشو"
   - "کیفیت بالا"
