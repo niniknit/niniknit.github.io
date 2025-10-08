@@ -13,7 +13,7 @@ layout: default
           {% if page.images.size > 1 %}
             <div class="image-gallery">
               {% for image in page.images %}
-                <img src="{{ image | relative_url }}" alt="{{ page.title }}" class="gallery-thumb" onclick="changeMainImage('{{ image | relative_url }}'); openLightbox('{{ image | relative_url }}')">
+                <img src="{{ image | relative_url }}" alt="{{ page.title }}" class="gallery-thumb" onclick="changeMainImage('{{ image | relative_url }}')">
               {% endfor %}
             </div>
           {% endif %}
@@ -54,7 +54,7 @@ layout: default
             <h3>رنگ‌های موجود:</h3>
             <div class="color-options">
               {% for color in page.colors %}
-                <span class="color-option" style="background-color: {{ color.code }}; color: {{ color.text_color | default: '#000' }}">{{ color.name }}</span>
+                <span class="color-option" data-bg="{{ color.code }}" data-text="{{ color.text_color | default: '#000' }}">{{ color.name }}</span>
               {% endfor %}
             </div>
           </div>
@@ -379,7 +379,8 @@ layout: default
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(1);
-  max-width: none; /* we control size via transform */
+  max-width: none; /* prevent CSS from shrinking; we manage size by transform */
+  max-height: none;
   will-change: transform;
   user-select: none;
   -webkit-user-drag: none;
@@ -461,12 +462,31 @@ let lbStartScale = 1;
 function openLightbox(src) {
   const lb = document.getElementById('lightbox');
   const img = document.getElementById('lightbox-image');
+  const viewport = document.getElementById('lightbox-viewport');
   if (!lb || !img) return;
   img.src = src;
-  resetLightboxTransform();
-  lb.style.display = 'block';
-  lb.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
+  // When image loads (or is cached), compute fit-to-screen scale to show full image
+  const fitAndOpen = () => {
+    if (!viewport) return;
+    const vpRect = viewport.getBoundingClientRect();
+    const naturalW = img.naturalWidth || 1;
+    const naturalH = img.naturalHeight || 1;
+    const scaleW = vpRect.width / naturalW;
+    const scaleH = vpRect.height / naturalH;
+    lbScale = Math.min(scaleW, scaleH);
+    lbMinScale = lbScale; // allow zooming out only to fit level
+    lbTranslateX = 0;
+    lbTranslateY = 0;
+    applyLbTransform();
+    lb.style.display = 'block';
+    lb.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+  if (img.complete) {
+    fitAndOpen();
+  } else {
+    img.onload = fitAndOpen;
+  }
 }
 
 function closeLightbox() {
@@ -480,7 +500,7 @@ function closeLightbox() {
 function applyLbTransform() {
   const img = document.getElementById('lightbox-image');
   if (!img) return;
-  img.style.transform = `translate(calc(-50% + ${lbTranslateX}px), calc(-50% + ${lbTranslateY}px)) scale(${lbScale})`;
+  img.style.transform = 'translate(calc(-50% + ' + lbTranslateX + 'px), calc(-50% + ' + lbTranslateY + 'px)) scale(' + lbScale + ')';
 }
 
 function resetLightboxTransform() {
@@ -499,6 +519,14 @@ document.addEventListener('DOMContentLoaded', function() {
   const btnIn = document.getElementById('lb-zoom-in');
   const btnOut = document.getElementById('lb-zoom-out');
   const btnReset = document.getElementById('lb-reset');
+  // Apply inline styles for color chips without tripping CSS linter
+  const colorChips = document.querySelectorAll('.color-option[data-bg]');
+  colorChips.forEach(function(el){
+    const bg = el.getAttribute('data-bg');
+    const tx = el.getAttribute('data-text') || '#000';
+    if (bg) el.style.backgroundColor = bg;
+    el.style.color = tx;
+  });
 
   if (!lb || !viewport) return;
 
@@ -570,5 +598,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
   viewport.addEventListener('touchend', function(){ lbDragging = false; lbStartDistance = 0; }, { passive: true });
 });
-</script>
 </script>
