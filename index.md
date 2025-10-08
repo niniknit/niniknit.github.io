@@ -44,7 +44,7 @@ layout: default
     <div class="products-grid">
       <div class="product-card">
         <div class="product-image">
-          <img src="/images/baby-sweater.jpg" alt="پلیور نوزاد" onerror="this.style.display='none'">
+          <img src="/images/baby-sweater.webp" alt="پلیور نوزاد" onerror="this.style.display='none'">
           <div class="product-overlay">
             <a href="https://wa.me/989171035286?text=سلام، در مورد پلیور نوزاد سوال دارم" class="btn btn-whatsapp">سوال دارم</a>
           </div>
@@ -54,7 +54,7 @@ layout: default
       </div>
       <div class="product-card">
         <div class="product-image">
-          <img src="/images/baby-hat.jpg" alt="کلاه نوزاد" onerror="this.style.display='none'">
+          <img src="/images/baby-hat.webp" alt="کلاه نوزاد" onerror="this.style.display='none'">
           <div class="product-overlay">
             <a href="https://wa.me/989171035286?text=سلام، در مورد کلاه نوزاد سوال دارم" class="btn btn-whatsapp">سوال دارم</a>
           </div>
@@ -64,7 +64,7 @@ layout: default
       </div>
       <div class="product-card">
         <div class="product-image">
-          <img src="/images/baby-booties.jpg" alt="جوراب نوزاد" onerror="this.style.display='none'">
+          <img src="/images/baby-set.webp" alt="ست نوزاد" onerror="this.style.display='none'">
           <div class="product-overlay">
             <a href="https://wa.me/989171035286?text=سلام، در مورد جوراب نوزاد سوال دارم" class="btn btn-whatsapp">سوال دارم</a>
           </div>
