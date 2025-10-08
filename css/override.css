@@ -536,6 +536,41 @@ p {
   font-size: 1.2rem;
 }
 
+/* Ensure readable text colors on white cards in contact page */
+.contact-page h1,
+.contact-page h2,
+.contact-page h3,
+.contact-page p,
+.contact-page a {
+  color: #2c3e50;
+}
+
+.contact-method-card,
+.info-item,
+.faq-item,
+.guide-step {
+  background: white;
+}
+
+.contact-method-card h3,
+.info-item h3,
+.faq-item h3,
+.guide-step h3 {
+  color: #2c3e50;
+}
+
+.contact-method-card p,
+.info-item p,
+.faq-item p,
+.guide-step p {
+  color: #555;
+}
+
+/* Keep buttons legible on light backgrounds */
+.contact-page .btn {
+  color: white;
+}
+
 .contact-method-card {
   display: flex;
   align-items: center;

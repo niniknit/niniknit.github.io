@@ -8,12 +8,12 @@ layout: default
       <div class="product-images">
         {% if page.images %}
           <div class="main-image">
-            <img src="{{ page.images[0] | relative_url }}" alt="{{ page.title }}" class="product-main-img" onclick="openLightbox(this.src)">
+            <img src="{{ page.images[0] | relative_url }}" alt="{{ page.title }}" class="product-main-img" onclick="openLightbox(this.src)" loading="eager" decoding="async">
           </div>
           {% if page.images.size > 1 %}
             <div class="image-gallery">
               {% for image in page.images %}
-                <img src="{{ image | relative_url }}" alt="{{ page.title }}" class="gallery-thumb" onclick="changeMainImage('{{ image | relative_url }}')">
+                <img src="{{ image | relative_url }}" alt="{{ page.title }}" class="gallery-thumb" onclick="changeMainImage('{{ image | relative_url }}')" loading="lazy" decoding="async">
               {% endfor %}
             </div>
           {% endif %}
@@ -440,6 +440,41 @@ layout: default
 </style>
 
 <script>
+// Structured data for product (JSON-LD)
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    var productData = {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": {{ page.title | jsonify }},
+      {% if page.description %}
+      "description": {{ page.description | strip_html | strip | jsonify }},
+      {% endif %}
+      {% if page.images %}
+      "image": {{ page.images | jsonify }},
+      {% endif %}
+      "brand": {
+        "@type": "Brand",
+        "name": {{ site.title | jsonify }}
+      },
+      "url": {{ page.url | absolute_url | jsonify }},
+      {% if page.price %}
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "IRR",
+        "price": {{ page.price | jsonify }},
+        "availability": "https://schema.org/InStock",
+        "url": {{ page.url | absolute_url | jsonify }}
+      }
+      {% endif %}
+    };
+    var ld = document.createElement('script');
+    ld.type = 'application/ld+json';
+    ld.text = JSON.stringify(productData);
+    document.head.appendChild(ld);
+  } catch (e) {}
+});
+
 function changeMainImage(imageSrc) {
   const mainImg = document.querySelector('.product-main-img');
   if (mainImg) {
@@ -474,7 +509,9 @@ function openLightbox(src) {
     const scaleW = vpRect.width / naturalW;
     const scaleH = vpRect.height / naturalH;
     lbScale = Math.min(scaleW, scaleH);
-    lbMinScale = lbScale; // allow zooming out only to fit level
+    // Prevent extremely tiny images; default to 1 if image smaller than viewport
+    if (!isFinite(lbScale) || lbScale <= 0) lbScale = 1;
+    lbMinScale = lbScale;
     lbTranslateX = 0;
     lbTranslateY = 0;
     applyLbTransform();

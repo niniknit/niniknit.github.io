@@ -44,7 +44,7 @@ permalink: /products/
           <div class="product-card">
             <div class="product-image">
               {% if product.images %}
-                <img src="{{ product.images[0] | relative_url }}" alt="{{ product.title }}" onerror="this.style.display='none'">
+                <img src="{{ product.images[0] | relative_url }}" alt="{{ product.title }}" loading="lazy" decoding="async" onerror="this.style.display='none'">
               {% else %}
                 <div class="placeholder-image">
                   <span class="placeholder-icon">🖼️</span>
