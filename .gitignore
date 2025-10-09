@@ -4,3 +4,6 @@
 .obsidian/workspace.json
 .obsidian/templates.json
 /.obsidian
+.obsidian/plugins/image-converter/data.json
+/.obsidian/plugins
+/.obsidian
